@@ -1,0 +1,56 @@
+# objdump how2use
+우선 c파일을 gdb가 줄 번호와 변수 이름을 인식할 수 있도록 -g 옵션을 붙여 컴파일
+한다. -> gcc -g -o test test.c
+ 기능1. objdump -d test => 바이너리 안 기계어를 어셈블리 코드로 변환, 터미널
+                           에 출력한다. 
+        특정 부분(예: main) 근처만 보고싶다면, objdump -d test | grep -A 25 "<main>:"
+ 기능2. objdump -S test | grep -A 30 "<main>:" => C 소스코드와 어셈블리 함께 보기
+
+ 기능 3. objdump -t test => 심볼 테이블 확인. 함수, 전역 변수 등의 이름과 메모리 주소 목록.
+
+ 기능 4. objdump -d test > test.s => 바이너리의 전체 어셈블리를 파일로 리다이렉션해 저장, 편하게 볼 수 있음. 
+
+
+ # gdb how2use
+
+ gdb ./test => gdb 실행
+
+실습 내용: 
+(gdb) break main             # main 시작점에 중단점 설정
+(gdb) run                    # 프로그램 실행 (main에서 멈춤)
+(gdb) next                   # 한 줄 실행 (printf 지나침)
+(gdb) print x                # 변수 x의 값 출력 -> 10
+(gdb) break calculate        # calculate 함수 시작점에 중단점 설정
+(gdb) continue               # calculate 진입점까지 실행
+(gdb) print a                # 매개변수 a 값 확인 -> 10
+(gdb) print b                # 매개변수 b 값 확인 -> 20
+
+continue
+
+(gdb) print ptr              # ptr의 값을 확인 -> (int *) 0x0 (NULL 포인터 확인!)
+(gdb) backtrace              # (또는 bt) 호출 스택 추적
+
+
+브레이크포인트 초기화=> delete
+브레이크포인트 테이블 보기 => info b
+
+
+
+
+어셈블리 기준 next는 ni. 
+어셈블리 코드 레이아웃 => layout asm
+레지스터 값 실시간 변동 테이블을 보고 싶다면 layout regs
+어떤 레지스터가 가리키는 메모리 값(스트링)을 보고 싶다면, x/s $rdi
+정수면 x/d, 16진수면 x/gx, 여러개 한번에 보고싶으면 x/8gx(8개 한번에 보기)
+
+
+bomb lab 정답; 
+
+phase 1: Border relations with Canada have never been better. 
+phase 2: 1 2 4 8 16 32
+phase 3: 점프테이블로 풀기, 답은 5 206.
+phase 4: first number should be below 0xe(14). number 2 should be 0. 
+ fn, 0, 14            => 7 0   이진탐색 코드임. 또 리턴값은 왼쪽으로 가냐 오른족으로 가냐에따라 달라짐. 
+phase 5: 단순한 문자비교 역추적. ionefg
+
+phase 6: 연결 리스트..상당히 어려움.
